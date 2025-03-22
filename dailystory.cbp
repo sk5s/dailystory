@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="dailystory" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/dailystory" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+					<Add option="-std=c++20" />
+					<Add directory="C:/cef_binary_134.3.5+g36934eb+chromium-134.0.6998.89_windows64" />
+				</Compiler>
+				<Linker>
+					<Add library="C:/cef_binary_134.3.5+g36934eb+chromium-134.0.6998.89_windows64/Release/libcef.lib" />
+					<Add library="C:/cef_binary_134.3.5+g36934eb+chromium-134.0.6998.89_windows64/build/libcef_dll_wrapper/libcef_dll_wrapper.a" />
+					<Add library="shlwapi" />
+					<Add directory="C:/cef_binary_134.3.5+g36934eb+chromium-134.0.6998.89_windows64/Release" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/dailystory" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+		</Compiler>
+		<Unit filename="main/app.cpp" />
+		<Unit filename="main/app.hpp" />
+		<Unit filename="main/client_handler.cpp" />
+		<Unit filename="main/client_handler.hpp" />
+		<Unit filename="main/js_binding.cpp" />
+		<Unit filename="main/js_binding.hpp" />
+		<Unit filename="main/main.cpp" />
+		<Unit filename="main/simple_app.cpp" />
+		<Unit filename="main/simple_app.hpp" />
+		<Unit filename="main/simple_handler.cpp" />
+		<Unit filename="main/simple_handler.hpp" />
+		<Extensions />
+	</Project>
+</CodeBlocks_project_file>
