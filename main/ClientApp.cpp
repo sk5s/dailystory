@@ -17,29 +17,52 @@
  *   DEALINGS IN THE SOFTWARE.
  ******************************************************************************/
 
- #include "ClientApp.hpp"
+#include "ClientApp.hpp"
 
- #include "ClientHandler.hpp"
- #include "ClientV8ExtensionHandler.hpp"
- #include "include/wrapper/cef_helpers.h"
- 
- ClientApp::ClientApp()
- {
- }
- 
- void ClientApp::OnWebKitInitialized()
- {
-   std::string app_code =
-     "var app;"
-     "if (!app)"
-     "    app = {};"
-     "(function() {"
-     "    app.ChangeTextInJS = function(text) {"
-     "        native function ChangeTextInJS();"
-     "        return ChangeTextInJS(text);"
-     "    };"
-     "})();";
- 
-   CefRegisterExtension("v8/app", app_code,
-                        new ClientV8ExtensionHandler(this));
- }
+#include "ClientHandler.hpp"
+#include "ClientV8ExtensionHandler.hpp"
+#include "include/wrapper/cef_helpers.h"
+
+ClientApp::ClientApp()
+{
+}
+
+void ClientApp::OnWebKitInitialized()
+{
+  // std::string app_code =
+  //     "var app;"
+  //     "if (!app)"
+  //     "    app = {};"
+  //     "(function() {"
+  //     "    app.ChangeTextInJS = function(text) {"
+  //     "        native function ChangeTextInJS();"
+  //     "        return ChangeTextInJS(text);"
+  //     "    };"
+  //     "})();";
+
+  std::string app_code =
+    "var app;"
+    "if (!app)"
+    "    app = {};"
+    "(function() {"
+    "    app.ChangeTextInJS = function(text) {"
+    "        native function ChangeTextInJS();"
+    "        return ChangeTextInJS(text);"
+    "    };"
+    "    app.saveDiary = function(username, content) {"
+    "        native function saveDiary();"
+    "        return saveDiary(username, content);"
+    "    };"
+    "    app.loadDiary = function(username) {"
+    "        native function loadDiary();"
+    "        return loadDiary(username);"
+    "    };"
+    "    app.getUserList = function() {"
+    "        native function getUserList();"
+    "        return getUserList();"
+    "    };"
+    "})();";
+
+  CefRegisterExtension("v8/app", app_code,
+                       new ClientV8ExtensionHandler(this));
+}

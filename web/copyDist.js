@@ -8,6 +8,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const distFolder = path.resolve(__dirname, 'dist');
+const outerFolder = path.resolve(__dirname, '../dist');
 const debugFolder = path.resolve(__dirname, '../bin/Debug/dist');
 const releaseFolder = path.resolve(__dirname, '../bin/Release/dist');
 
@@ -24,6 +25,7 @@ async function copyAndClean(src, dest) {
 }
 
 (async () => {
+  await copyAndClean(distFolder, outerFolder);
   await copyAndClean(distFolder, debugFolder);
   if (await fs.existsSync(releaseFolder)) {
     await copyAndClean(distFolder, releaseFolder);

@@ -17,24 +17,25 @@
  *   DEALINGS IN THE SOFTWARE.
  ******************************************************************************/
 
- #ifndef __CEF3SimpleSample__ClientHandler__
- #define __CEF3SimpleSample__ClientHandler__
+#ifndef __CEF3SimpleSample__ClientHandler__
+#define __CEF3SimpleSample__ClientHandler__
 
- #include "include/cef_app.h"
- #include "include/cef_client.h"
+#include "include/cef_app.h"
+#include "include/cef_client.h"
 
- class ClientApp : public CefApp, public CefRenderProcessHandler {
- public:
- ClientApp();
+class ClientApp : public CefApp, public CefRenderProcessHandler
+{
+public:
+  ClientApp();
 
- CefRefPtr<CefRenderProcessHandler> GetRenderProcessHandler() override
- {
-   return this;
- }
+  CefRefPtr<CefRenderProcessHandler> GetRenderProcessHandler() override
+  {
+    return this;
+  }
 
- void OnWebKitInitialized() override;
+  void OnWebKitInitialized() override;
 
- IMPLEMENT_REFCOUNTING(ClientApp);
- };
+  IMPLEMENT_REFCOUNTING(ClientApp);
+};
 
- #endif /* defined(__CEF3SimpleSample__ClientHandler__) */
+#endif /* defined(__CEF3SimpleSample__ClientHandler__) */
