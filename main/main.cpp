@@ -20,11 +20,126 @@
 #include <string>
 #include <algorithm>
 #include <windows.h>
+#include <microhttpd.h>
+#include <thread>
+#include <fstream>
+#include <iostream>
 
 #include "include/cef_app.h"
 #include "include/cef_browser.h"
 #include "ClientApp.hpp"
 #include "ClientHandler.hpp"
+
+constexpr bool devMode = true;
+constexpr int PORT = 5175;
+bool serverRunning = false;
+
+// Server
+
+// 檔案系統根目錄
+const std::string BASE_DIR = "./dist";
+
+// 處理 HTTP 請求的回調函數
+static MHD_Result request_handler(void* cls, struct MHD_Connection* connection,
+                          const char* url, const char* method,
+                          const char* version, const char* upload_data,
+                          size_t* upload_data_size, void** ptr) {
+    if (strcmp(method, "GET") != 0) {
+        return MHD_NO; // 只處理 GET 請求
+    }
+
+    // 構建檔案路徑
+    std::string file_path = BASE_DIR + (url[0] == '/' ? url : "/" + std::string(url));
+    if (file_path == BASE_DIR + "/") {
+        file_path += "index.html"; // 預設檔案
+    }
+
+    // 打開檔案
+    std::ifstream file(file_path, std::ios::binary);
+    if (!file.is_open()) {
+        std::cerr << "File not found: " << file_path << ", Error: " << std::strerror(errno) << std::endl;
+        const char* error_page = "<html><body><h1>404 Not Found</h1></body></html>";
+        struct MHD_Response* response = MHD_create_response_from_buffer(strlen(error_page),
+                                                                       (void*)error_page,
+                                                                       MHD_RESPMEM_PERSISTENT);
+        MHD_Result ret = MHD_queue_response(connection, MHD_HTTP_NOT_FOUND, response);
+        MHD_destroy_response(response);
+        return ret;
+    }
+
+    // 讀取檔案內容
+    file.seekg(0, std::ios::end);
+    size_t file_size = static_cast<size_t>(file.tellg());  // 避免 tellg() 返回 -1
+    file.seekg(0, std::ios::beg);
+
+    if (file_size == 0) {
+        file.close();
+        return MHD_NO;
+    }
+
+    char* buffer = new char[file_size];
+    file.read(buffer, file_size);
+    file.close();
+
+    // 創建回應
+    struct MHD_Response* response = MHD_create_response_from_buffer(file_size,
+                                                                   buffer,
+                                                                   MHD_RESPMEM_MUST_FREE);
+    if (!response) {
+        delete[] buffer;
+        return MHD_NO;
+    }
+
+    // 設置 MIME 類型
+    if (file_path.find(".html") != std::string::npos) {
+        MHD_add_response_header(response, "Content-Type", "text/html");
+    } else if (file_path.find(".css") != std::string::npos) {
+        MHD_add_response_header(response, "Content-Type", "text/css");
+    } else if (file_path.find(".js") != std::string::npos) {
+        MHD_add_response_header(response, "Content-Type", "application/javascript");
+    } else if (file_path.find(".png") != std::string::npos) {
+        MHD_add_response_header(response, "Content-Type", "image/png");
+    } else if (file_path.find(".jpg") != std::string::npos || file_path.find(".jpeg") != std::string::npos) {
+        MHD_add_response_header(response, "Content-Type", "image/jpeg");
+    } else if (file_path.find(".svg") != std::string::npos) {
+        MHD_add_response_header(response, "Content-Type", "image/svg+xml");
+    }
+
+    MHD_Result ret = MHD_queue_response(connection, MHD_HTTP_OK, response);
+    MHD_destroy_response(response);
+    return ret;
+}
+
+// 啟動伺服器
+void start_server() {
+    if (!serverRunning) {
+        struct MHD_Daemon* daemon = MHD_start_daemon(
+            MHD_USE_INTERNAL_POLLING_THREAD,
+            PORT,
+            NULL,
+            NULL,
+            &request_handler, // 正確的函式對應
+            NULL,
+            MHD_OPTION_END
+        );
+
+        if (!daemon) {
+            std::cerr << "Failed to start server" << std::endl;
+            return;
+        }
+        std::cout << "Server running on http://localhost:" << PORT << std::endl;
+
+        // 保持伺服器運行
+        while (true) {
+            std::this_thread::sleep_for(std::chrono::seconds(1));
+        }
+
+        MHD_stop_daemon(daemon);
+        serverRunning = true;
+    };
+}
+
+
 
 ClientHandler *g_handler = 0;
 
@@ -140,8 +255,12 @@ HWND CreateMessageWindow(HINSTANCE hInstance)
 	                    HWND_MESSAGE, 0, hInstance, 0);
 }
 
+
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow)
 {
+    // 在背景執行緒中啟動伺服器
+    std::thread server_thread(start_server);
+
 	CefMainArgs main_args(hInstance);
 
 	CefRefPtr<ClientApp> app(new ClientApp);
@@ -176,7 +295,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow)
 	g_handler = (ClientHandler*) client.get();
 	// std::string path         = "file://" + GetApplicationDir() +
 	//                            "/dist/index.html";
-	std::string path = "http://localhost:5173";
+	std::string path = "http://localhost:" + std::to_string(PORT) + "/";
+	if (devMode){
+        path = "http://localhost:5173/";
+	}
 	CefRefPtr<CefCommandLine> command_line =
 		CefCommandLine::GetGlobalCommandLine();
 
