@@ -39,17 +39,13 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="main/app.cpp" />
-		<Unit filename="main/app.hpp" />
-		<Unit filename="main/client_handler.cpp" />
-		<Unit filename="main/client_handler.hpp" />
-		<Unit filename="main/js_binding.cpp" />
-		<Unit filename="main/js_binding.hpp" />
+		<Unit filename="main/ClientApp.cpp" />
+		<Unit filename="main/ClientApp.hpp" />
+		<Unit filename="main/ClientHandler.cpp" />
+		<Unit filename="main/ClientHandler.hpp" />
+		<Unit filename="main/ClientV8ExtensionHandler.cpp" />
+		<Unit filename="main/ClientV8ExtensionHandler.hpp" />
 		<Unit filename="main/main.cpp" />
-		<Unit filename="main/simple_app.cpp" />
-		<Unit filename="main/simple_app.hpp" />
-		<Unit filename="main/simple_handler.cpp" />
-		<Unit filename="main/simple_handler.hpp" />
 		<Extensions />
 	</Project>
 </CodeBlocks_project_file>
