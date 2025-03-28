@@ -262,8 +262,8 @@ HWND CreateMessageWindow(HINSTANCE hInstance)
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow)
 {
-    // 在背景執行緒中啟動伺服器
-    std::thread server_thread(start_server);
+  // 在背景執行緒中啟動伺服器
+  std::thread server_thread(start_server);
 
 	CefMainArgs main_args(hInstance);
 

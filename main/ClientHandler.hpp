@@ -25,6 +25,8 @@
 #include "include/cef_v8.h"
 #include "include/cef_browser.h"
 
+#include "BrowserHandler.hpp"
+
 class ClientHandler : public CefClient, public CefLifeSpanHandler
 {
 public:
@@ -50,6 +52,10 @@ public:
   virtual bool DoClose(CefRefPtr<CefBrowser> browser) override;
   virtual void OnAfterCreated(CefRefPtr<CefBrowser> browser) override;
   virtual void OnBeforeClose(CefRefPtr<CefBrowser> browser) override;
+
+  CefRefPtr<CefContextMenuHandler> GetContextMenuHandler() override {  // 修正為 CefContextMenuHandler
+    return new BrowserHandler();
+  }
 
 protected:
   // The child browser window
