@@ -20,6 +20,8 @@
 					<Add library="C:/cef_binary_134.3.5+g36934eb+chromium-134.0.6998.89_windows64/Release/libcef.lib" />
 					<Add library="C:/cef_binary_134.3.5+g36934eb+chromium-134.0.6998.89_windows64/build/libcef_dll_wrapper/libcef_dll_wrapper.a" />
 					<Add library="shlwapi" />
+					<Add library="microhttpd" />
+					<Add library="curl" />
 					<Add directory="C:/cef_binary_134.3.5+g36934eb+chromium-134.0.6998.89_windows64/Release" />
 				</Linker>
 			</Target>
@@ -39,6 +41,8 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="main/BrowserHandler.cpp" />
+		<Unit filename="main/BrowserHandler.hpp" />
 		<Unit filename="main/ClientApp.cpp" />
 		<Unit filename="main/ClientApp.hpp" />
 		<Unit filename="main/ClientHandler.cpp" />
@@ -46,6 +50,8 @@
 		<Unit filename="main/ClientV8ExtensionHandler.cpp" />
 		<Unit filename="main/ClientV8ExtensionHandler.hpp" />
 		<Unit filename="main/main.cpp" />
+		<Unit filename="main/utils.cpp" />
+		<Unit filename="main/utils.hpp" />
 		<Extensions />
 	</Project>
 </CodeBlocks_project_file>

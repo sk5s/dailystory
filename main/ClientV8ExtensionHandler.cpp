@@ -23,6 +23,9 @@
 #include <string>
 #include <filesystem>
 #include <vector>
+#include <iostream>
+
+#include "utils.hpp"
 
 namespace fs = std::filesystem;
 
@@ -127,6 +130,16 @@ bool ClientV8ExtensionHandler::Execute(const CefString &name,
     }
     retval = array;
     return true;
+  }
+
+  if (name == "addUser") {
+    if (arguments.size() == 1 && arguments[0]->IsString()) {
+      if (downloadAvatar(arguments[0]->GetStringValue().ToString())) {
+          std::cout << "Avatar downloaded successfully." << std::endl;
+      } else {
+          std::cout << "Failed to download avatar." << std::endl;
+      }
+    }
   }
 
   return false;

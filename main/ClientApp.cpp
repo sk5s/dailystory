@@ -61,6 +61,10 @@ void ClientApp::OnWebKitInitialized()
     "        native function getUserList();"
     "        return getUserList();"
     "    };"
+    "    app.addUser = function(username) {"
+    "        native function addUser();"
+    "        return addUser(username);"
+    "    };"
     "})();";
 
   CefRegisterExtension("v8/app", app_code,

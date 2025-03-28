@@ -1,6 +1,7 @@
 import { useBackend } from "@/BackendContext";
 import { Button } from "@/components/ui/button";
 import { useCallback, useEffect, useState } from "react";
+import Accounts from "./Accounts";
 
 function AccountSettings() {
   const [username, setUsername] = useState("");
@@ -87,24 +88,7 @@ function AccountSettings() {
       <div className="mt-5">
         <h3>切換帳號</h3>
         <div className="border rounded p-4">
-          {users.length > 0 ? (
-            <ul>
-              {users.map((user) => (
-                <li
-                  key={user}
-                  onClick={() => handleSwitchUser(user)}
-                  style={{
-                    cursor: "pointer",
-                    fontWeight: user === selectedUser ? "bold" : "normal",
-                  }}
-                >
-                  {user}
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p>尚未有帳號</p>
-          )}
+          <Accounts selectedUser={selectedUser} onAccountSelect={(username) => handleSwitchUser(username)} />
         </div>
       </div>
     </div>
