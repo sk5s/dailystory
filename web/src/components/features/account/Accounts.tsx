@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { useBackend } from "@/BackendContext";
+import React from 'react';
 import { Account } from './Account';
+import { useAccountContext } from './AccountContext';
 
 interface AccountsProps {
   onAccountSelect: (username: string) => void;
@@ -8,20 +8,7 @@ interface AccountsProps {
 }
 
 const Accounts: React.FC<AccountsProps> = ({ onAccountSelect, selectedUser }) => {
-  const [users, setUsers] = useState<string[]>([]);
-  // const [selectedUser, setSelectedUser] = useState<string | null>(null);
-  const { getUserList, isReady } = useBackend();
-
-  const updateUserList = useCallback(() => {
-    const availableUsers = getUserList();
-    setUsers(availableUsers);
-  }, [getUserList]);
-
-  useEffect(() => {
-    if (isReady){
-      updateUserList();
-    }
-  }, [updateUserList, isReady]);
+  const { users } = useAccountContext();
 
   const handleUserSelect = (username: string) => {
     if (onAccountSelect) {
@@ -30,17 +17,19 @@ const Accounts: React.FC<AccountsProps> = ({ onAccountSelect, selectedUser }) =>
   };
 
   return (
-    <div className="accounts-container">
+    <div>
       {users.length > 0 ? (
         <>
           <div className="flex flex-row gap-4">
             {users.map((username) => (
-              <Account key={username} username={username} selectedUser={selectedUser} onClick={() => handleUserSelect(username)} />
+              <div key={username}>
+                <Account key={username} username={username} selectedUser={selectedUser} onClick={() => handleUserSelect(username)} />
+              </div>
             ))}
           </div>
         </>
       ) : (
-        <p>No accounts available</p>
+        <p>還沒有帳號</p>
       )}
     </div>
   );

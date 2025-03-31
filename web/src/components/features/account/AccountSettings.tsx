@@ -1,28 +1,15 @@
 import { useBackend } from "@/BackendContext";
 import { Button } from "@/components/ui/button";
-import { useCallback, useEffect, useState } from "react";
-import Accounts from "./Accounts";
+import { useEffect, useState } from "react";
+import { useAccountContext } from "./AccountContext";
+import { MdEditor } from "../editor/Editor";
 
 function AccountSettings() {
   const [username, setUsername] = useState("");
   const [diaryContent, setDiaryContent] = useState("");
-  const [users, setUsers] = useState<string[]>([]);
-  const [selectedUser, setSelectedUser] = useState("");
+  const { selectedUser, updateUserList } = useAccountContext();
 
-  const { saveDiary, loadDiary, getUserList, isReady } = useBackend();
-
-  const updateUserList = useCallback(() => {
-    const users = getUserList();
-    setUsers(users);
-    console.log(users);
-  }, [getUserList]);
-
-  // 載入現有帳號
-  useEffect(() => {
-    if (isReady) {
-      updateUserList();
-    }
-  }, [isReady, updateUserList]);
+  const { saveDiary, loadDiary, isReady } = useBackend();
 
   // 處理儲存日記
   const handleSaveDiary = () => {
@@ -48,11 +35,18 @@ function AccountSettings() {
       alert('後端尚未準備好，請稍候');
       return;
     }
-    setSelectedUser(user);
+    // setSelectedUser(user);
     setUsername(user);
     const content = loadDiary(user);
     setDiaryContent(content);
   };
+
+  useEffect(() => {
+    if (selectedUser){
+      handleSwitchUser(selectedUser!)
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedUser])
 
   return (
     <div>
@@ -70,13 +64,15 @@ function AccountSettings() {
       {/* 日記內容 */}
       <div style={{ marginTop: "20px" }}>
         <label>日記內容: </label><br/>
-        <textarea
+        {/* <textarea
           value={diaryContent}
           onChange={(e) => setDiaryContent(e.target.value)}
           rows={10}
           cols={50}
           placeholder="寫下你的日記..."
-        />
+        /> */}
+
+        <MdEditor markdown={diaryContent} setMarkdown={(mdtext) => setDiaryContent(mdtext)} />
       </div>
 
       {/* 儲存按鈕 */}
@@ -85,12 +81,15 @@ function AccountSettings() {
       </Button>
 
       {/* 帳號列表 */}
-      <div className="mt-5">
+      {/* <div className="mt-5">
         <h3>切換帳號</h3>
         <div className="border rounded p-4">
-          <Accounts selectedUser={selectedUser} onAccountSelect={(username) => handleSwitchUser(username)} />
+          <ScrollArea className="">
+            <Accounts selectedUser={selectedUser} onAccountSelect={(username) => handleSwitchUser(username)} />
+            <ScrollBar orientation="horizontal" />
+          </ScrollArea>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

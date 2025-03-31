@@ -49,6 +49,7 @@
 		<Unit filename="main/ClientHandler.hpp" />
 		<Unit filename="main/ClientV8ExtensionHandler.cpp" />
 		<Unit filename="main/ClientV8ExtensionHandler.hpp" />
+		<Unit filename="main/env.hpp" />
 		<Unit filename="main/main.cpp" />
 		<Unit filename="main/utils.cpp" />
 		<Unit filename="main/utils.hpp" />

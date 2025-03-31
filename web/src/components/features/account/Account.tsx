@@ -1,16 +1,17 @@
-import clsx from "clsx";
+import { cn } from "@/lib/utils";
 
 interface UserProfileProps {
   username: string;
   selectedUser: string | null;
   onClick: () => void;
+  variant?: "sm";
 }
 
-export const Account: React.FC<UserProfileProps> = ({ username, selectedUser, onClick }) => (
+export const Account: React.FC<UserProfileProps> = ({ username, selectedUser, onClick, variant }) => (
   <div
     key={username}
-    className={clsx(
-      "flex flex-col items-center rounded-xl",
+    className={cn(
+      "flex flex-col items-center rounded-xl cursor-pointer",
     )}
     onClick={() => onClick()}
   >
@@ -18,9 +19,10 @@ export const Account: React.FC<UserProfileProps> = ({ username, selectedUser, on
       src={`/images/${username}.svg`}
       alt={`${username}'s profile`}
       className={
-        clsx(
-          "rounded-full",
-          selectedUser === username ? 'border border-black' : ''
+        cn(
+          "rounded-full aspect-square",
+          selectedUser === username ? 'border border-black' : '',
+          variant == "sm" && "w-8 h-8"
         )
       }
       onError={(e) => {
@@ -28,11 +30,13 @@ export const Account: React.FC<UserProfileProps> = ({ username, selectedUser, on
         (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${username}&background=random`;
       }}
     />
-    <h3 className={
-      clsx(
-        "",
-        selectedUser === username ? 'font-semibold' : ''
-      )
-    }>{username}</h3>
+    {variant != "sm" && (
+      <h3 className={
+        cn(
+          "truncate w-16 text-center",
+          selectedUser === username ? 'font-semibold' : ''
+        )
+      }>{username}</h3>
+    )}
   </div>
 );
