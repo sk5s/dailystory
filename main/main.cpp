@@ -30,11 +30,7 @@
 #include "ClientApp.hpp"
 #include "ClientHandler.hpp"
 
-constexpr bool devMode = true;
-constexpr int PORT = 5175;
-
-
-
+#include "env.hpp"
 
 bool serverRunning = false;
 
