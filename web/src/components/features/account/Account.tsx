@@ -20,9 +20,9 @@ export const Account: React.FC<UserProfileProps> = ({ username, selectedUser, on
       alt={`${username}'s profile`}
       className={
         cn(
-          "rounded-full aspect-square",
-          selectedUser === username ? 'border border-black' : '',
-          variant == "sm" && "w-8 h-8"
+          "rounded-full aspect-square bg-gradient-to-br from-transparent to-amber-100",
+          selectedUser === username ? 'border-black border-2' : '',
+          variant == "sm" ? "w-8 h-8" : "w-16 h-16"
         )
       }
       onError={(e) => {

@@ -26,8 +26,10 @@
 #include <iostream>
 
 #include "utils.hpp"
+#include "env.hpp"
 
 namespace fs = std::filesystem;
+using namespace std;
 
 ClientV8ExtensionHandler::ClientV8ExtensionHandler(CefRefPtr<CefApp> app)
 {
@@ -47,7 +49,7 @@ bool ClientV8ExtensionHandler::Execute(const CefString &name,
       CefString text = arguments[0]->GetStringValue();
       CefRefPtr<CefFrame> frame =
           CefV8Context::GetCurrentContext()->GetBrowser()->GetMainFrame();
-      std::string jscall = "ChangeText('";
+      string jscall = "ChangeText('";
       jscall += text;
       jscall += "');";
       frame->ExecuteJavaScript(jscall, frame->GetURL(), 0);
@@ -65,17 +67,22 @@ bool ClientV8ExtensionHandler::Execute(const CefString &name,
 
   // 儲存日記
   if (name == "saveDiary") {
-    if (arguments.size() == 2 && arguments[0]->IsString() && arguments[1]->IsString()) {
-      std::string username = arguments[0]->GetStringValue().ToString();
-      std::string content = arguments[1]->GetStringValue().ToString();
+    if (arguments.size() == 3 && arguments[0]->IsString() && arguments[1]->IsString() && arguments[2]->IsString()) {
+      string username = sanitizeString(arguments[0]->GetStringValue().ToString());
+      string date = sanitizeString(arguments[1]->GetStringValue().ToString());
+      string content = arguments[2]->GetStringValue().ToString();
 
-      std::string dir = "diaries";
-      if (!fs::exists(dir)) {
-        fs::create_directory(dir);
+      if (username == "") {
+        retval = CefV8Value::CreateString("invalidUsername");
+        exception = "failed";
+        return false;
       }
 
-      std::string filename = dir + "/" + username + ".txt";
-      std::ofstream outFile(filename, std::ios::out);
+      string subdir = noteSubDirPath(username, date);
+      fs::create_directories(subdir);
+
+      string filename = subdir + "/" + date + ".md";
+      ofstream outFile(filename, ios::out);
       if (outFile.is_open()) {
         outFile << content;
         outFile.close();
@@ -91,14 +98,15 @@ bool ClientV8ExtensionHandler::Execute(const CefString &name,
 
   // 載入日記
   if (name == "loadDiary") {
-    if (arguments.size() == 1 && arguments[0]->IsString()) {
-      std::string username = arguments[0]->GetStringValue().ToString();
-      std::string filename = "diaries/" + username + ".txt";
+    if (arguments.size() == 2 && arguments[0]->IsString() && arguments[1]->IsString()) {
+      string username = arguments[0]->GetStringValue().ToString();
+      string date = arguments[1]->GetStringValue().ToString();
+      string filename = noteSubDirPath(username, date) + "/" + date + ".md";
 
-      std::ifstream inFile(filename);
+      ifstream inFile(filename);
       if (inFile.is_open()) {
-        std::string content((std::istreambuf_iterator<char>(inFile)),
-                            std::istreambuf_iterator<char>());
+        string content((istreambuf_iterator<char>(inFile)),
+                            istreambuf_iterator<char>());
         inFile.close();
         retval = CefV8Value::CreateString(content);
       } else {
@@ -112,15 +120,13 @@ bool ClientV8ExtensionHandler::Execute(const CefString &name,
 
   // 獲取帳號列表
   if (name == "getUserList") {
-    std::vector<std::string> userList;
-    std::string dir = "diaries";
+    vector<string> userList;
+    string dir = dataDirName;
     if (fs::exists(dir)) {
       for (const auto& entry : fs::directory_iterator(dir)) {
-        std::string filename = entry.path().filename().string();
-        if (filename.ends_with(".txt")) {
-          std::string username = filename.substr(0, filename.size() - 4);
-          userList.push_back(username);
-        }
+          if (fs::is_directory(entry)) {
+              userList.push_back(entry.path().filename().string());
+          }
       }
     }
 
@@ -135,9 +141,9 @@ bool ClientV8ExtensionHandler::Execute(const CefString &name,
   if (name == "addUser") {
     if (arguments.size() == 1 && arguments[0]->IsString()) {
       if (downloadAvatar(arguments[0]->GetStringValue().ToString())) {
-          std::cout << "Avatar downloaded successfully." << std::endl;
+          cout << "Avatar downloaded successfully." << endl;
       } else {
-          std::cout << "Failed to download avatar." << std::endl;
+          cout << "Failed to download avatar." << endl;
       }
     }
   }

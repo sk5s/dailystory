@@ -4,8 +4,8 @@ import React, { createContext, useState, useEffect, useContext } from 'react';
 
 // 定義後端函式的類型
 interface BackendFunctions {
-  saveDiary: (username: string, content: string) => string|undefined;
-  loadDiary: (username: string) => string;
+  saveDiary: (username: string, date: string, content: string) => string|undefined;
+  loadDiary: (username: string, date: string) => string;
   getUserList: () => string[];
 }
 
@@ -22,7 +22,7 @@ const BackendContext = createContext<BackendContextValue>({
   saveDiary: () => {return ""},
   loadDiary: () => {return ""},
   getUserList: () => {return []},
-  isReady: false,
+  isReady: false
 });
 
 // Backend Provider 組件

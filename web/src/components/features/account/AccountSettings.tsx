@@ -1,18 +1,19 @@
 import { useBackend } from "@/BackendContext";
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useAccountContext } from "./AccountContext";
 import { MdEditor } from "../editor/Editor";
 
 function AccountSettings() {
   const [username, setUsername] = useState("");
   const [diaryContent, setDiaryContent] = useState("");
-  const { selectedUser, updateUserList } = useAccountContext();
+  const [disabled, setDisabled] = useState(true);
+  const { selectedUser, updateUserList, selectedDate, unsaved, setUnsaved } = useAccountContext();
 
   const { saveDiary, loadDiary, isReady } = useBackend();
 
   // 處理儲存日記
-  const handleSaveDiary = () => {
+  const handleSaveDiary = useCallback(() => {
     if (!isReady) {
       alert('後端尚未準備好，請稍候');
       return;
@@ -21,13 +22,14 @@ function AccountSettings() {
       alert('請輸入名字和日記內容');
       return;
     }
-    const result = saveDiary(username, diaryContent);
+    const result = saveDiary(username, selectedDate, diaryContent);
     console.log("Saving dairy", result);
     if (result === 'success'){
       alert("已儲存！");
       updateUserList();
+      setUnsaved(false);
     }
-  };
+  }, [isReady, username, diaryContent, saveDiary, selectedDate, updateUserList, setUnsaved]);
 
   // 切換帳號並載入日記
   const handleSwitchUser = (user: string) => {
@@ -35,18 +37,37 @@ function AccountSettings() {
       alert('後端尚未準備好，請稍候');
       return;
     }
-    // setSelectedUser(user);
+    setDisabled(true);
     setUsername(user);
-    const content = loadDiary(user);
-    setDiaryContent(content);
+    handleRefresh(user);
   };
+
+  const handleRefresh = useCallback(
+    (user: string) => {
+      setDisabled(true);
+      setUnsaved(false);
+      console.log("Getting file content...");
+      const content = loadDiary(user, selectedDate);
+      setDiaryContent(content);
+      setTimeout(() => {
+        setDisabled(false);
+      }, 200);
+    },
+    [loadDiary, selectedDate, setUnsaved]
+  );
 
   useEffect(() => {
     if (selectedUser){
-      handleSwitchUser(selectedUser!)
+      handleSwitchUser(selectedUser)
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedUser])
+
+  useEffect(() => {
+    if (selectedUser){
+      handleRefresh(selectedUser)
+    }
+  }, [handleRefresh, selectedDate, selectedUser])
 
   return (
     <div>
@@ -63,20 +84,24 @@ function AccountSettings() {
 
       {/* 日記內容 */}
       <div style={{ marginTop: "20px" }}>
-        <label>日記內容: </label><br/>
-        {/* <textarea
+        {/* <label>日記內容: </label><br/>
+        <textarea
           value={diaryContent}
           onChange={(e) => setDiaryContent(e.target.value)}
           rows={10}
           cols={50}
           placeholder="寫下你的日記..."
         /> */}
-
-        <MdEditor markdown={diaryContent} setMarkdown={(mdtext) => setDiaryContent(mdtext)} />
+        {!!selectedUser && (
+          <MdEditor disabled={disabled} markdown={diaryContent} setMarkdown={(mdtext) => {
+            if (!unsaved) setUnsaved(true);
+            setDiaryContent(mdtext);
+          }} />
+        )}
       </div>
 
       {/* 儲存按鈕 */}
-      <Button onClick={handleSaveDiary} className="mt-3">
+      <Button disabled={disabled} onClick={handleSaveDiary} className="mt-3">
         儲存日記
       </Button>
 

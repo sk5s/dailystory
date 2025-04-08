@@ -4,7 +4,10 @@
 #include <curl/curl.h>
 #include <sstream>
 
+#include "env.hpp"
+
 namespace fs = std::filesystem;
+using namespace std;
 
 // 下載時的回呼函式，負責寫入檔案
 size_t WriteCallback(void* contents, size_t size, size_t nmemb, void* userp) {
@@ -72,4 +75,21 @@ bool downloadAvatar(const std::string& username) {
 
     file.close();
     return true;
+}
+
+string sanitizeString(const string& str) {
+    string sanitized = str;
+    for (char& c : sanitized) {
+        if (!isalnum(c) && c != '-' && c != '_') {
+            c = '_';
+        }
+    }
+    return sanitized;
+}
+
+string noteSubDirPath(const string& username, const string& dateStr){
+    string date = sanitizeString(dateStr);
+    string year = date.substr(0, 4);
+    string month = date.substr(5, 2);
+    return dataDirName + "/" + sanitizeString(username) + "/" + year + "/" + month;
 }
