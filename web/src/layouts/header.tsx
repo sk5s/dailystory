@@ -61,7 +61,8 @@ const Header = () => {
             <NavigationMenuTrigger>檔案</NavigationMenuTrigger>
             <NavigationMenuContent>
               <DefaultContentLayout>
-                <NavigationMenuLink>查看月曆</NavigationMenuLink>
+                <NavigationMenuLink href="#/">查看日記</NavigationMenuLink>
+                <NavigationMenuLink href="#/calendar">查看月曆</NavigationMenuLink>
               </DefaultContentLayout>
             </NavigationMenuContent>
           </NavigationMenuItem>
