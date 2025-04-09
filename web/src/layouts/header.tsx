@@ -70,6 +70,7 @@ const Header = () => {
             <NavigationMenuTrigger>關於</NavigationMenuTrigger>
             <NavigationMenuContent>
               <DefaultContentLayout>
+                <NavigationMenuLink href="#/settings">設定</NavigationMenuLink>
                 <NavigationMenuLink>檢查更新</NavigationMenuLink>
                 <NavigationMenuLink>說明</NavigationMenuLink>
               </DefaultContentLayout>
