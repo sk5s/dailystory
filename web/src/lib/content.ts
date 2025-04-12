@@ -1,4 +1,3 @@
-import { Feature } from '@/components/ui/kibo-ui/calendar';
 import {
   addMonths,
   endOfMonth,

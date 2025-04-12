@@ -1,10 +1,12 @@
 import { useAccountContext } from "@/components/features/account/AccountContext"
 import Accounts from "@/components/features/account/Accounts"
 import NowAccount from "@/components/features/account/NowAccount"
+import { Button } from "@/components/ui/button"
 import { ModeToggle } from "@/components/ui/mode-toggle"
 import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger } from "@/components/ui/navigation-menu"
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 import { useCallback, useRef } from "react"
+import { Link } from "react-router"
 
 const Header = () => {
   const { selectedUser, setSelectedUser } = useAccountContext();
@@ -46,11 +48,16 @@ const Header = () => {
                 <div className="w-full">
                   <h3 className="mb-2">切換帳號</h3>
                   <ScrollArea className="md:w-[190px] lg:w-[290px] whitespace-nowrap pb-4" ref={viewportRef} onWheel={onWheel}>
-                    {/* <div> */}
+                    <div className="flex flex-row gap-4">
                       <Accounts selectedUser={selectedUser} onAccountSelect={(username) => {
-                      setSelectedUser(username);
-                    }} />
-                    {/* </div> */}
+                        setSelectedUser(username);
+                      }} />
+                      <Link to="/user">
+                        <Button className="w-16 h-16 rounded-full flex items-center justify-center bg-gray-200 hover:bg-gray-300">
+                          <span className="text-gray-600 font-bold text-xl w-8">+</span>
+                        </Button>
+                      </Link>
+                    </div>
                     <ScrollBar orientation="horizontal" />
                   </ScrollArea>
                 </div>

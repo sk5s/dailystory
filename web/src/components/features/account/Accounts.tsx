@@ -17,7 +17,7 @@ const Accounts: React.FC<AccountsProps> = ({ onAccountSelect, selectedUser }) =>
   };
 
   return (
-    <div>
+    <>
       {users.length > 0 ? (
         <>
           <div className="flex flex-row gap-4">
@@ -28,10 +28,8 @@ const Accounts: React.FC<AccountsProps> = ({ onAccountSelect, selectedUser }) =>
             ))}
           </div>
         </>
-      ) : (
-        <p>還沒有帳號</p>
-      )}
-    </div>
+      ) : null}
+    </>
   );
 };
 

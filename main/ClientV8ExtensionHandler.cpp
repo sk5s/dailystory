@@ -140,8 +140,10 @@ bool ClientV8ExtensionHandler::Execute(const CefString &name,
 
   if (name == "addUser") {
     if (arguments.size() == 1 && arguments[0]->IsString()) {
-      if (downloadAvatar(arguments[0]->GetStringValue().ToString())) {
+      string username = sanitizeString(arguments[0]->GetStringValue().ToString());
+      if (downloadAvatar(username)) {
           cout << "Avatar downloaded successfully." << endl;
+          fs::create_directories(dataDirName + "/" + username);
       } else {
           cout << "Failed to download avatar." << endl;
       }

@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useCallback, useEffect, useState } from "react";
 import { useAccountContext } from "./AccountContext";
 import { MdEditor } from "../editor/Editor";
+import { toast } from "sonner";
 
 function AccountSettings() {
   const [username, setUsername] = useState("");
@@ -15,17 +16,17 @@ function AccountSettings() {
   // 處理儲存日記
   const handleSaveDiary = useCallback(() => {
     if (!isReady) {
-      alert('後端尚未準備好，請稍候');
+      toast.error('後端尚未準備好，請稍候');
       return;
     }
     if (!username || !diaryContent) {
-      alert('請輸入名字和日記內容');
+      toast.error('請輸入名字和日記內容');
       return;
     }
     const result = saveDiary(username, selectedDate, diaryContent);
     console.log("Saving dairy", result);
     if (result === 'success'){
-      alert("已儲存！");
+      toast.success("已儲存！");
       updateUserList();
       setUnsaved(false);
     }
@@ -34,7 +35,7 @@ function AccountSettings() {
   // 切換帳號並載入日記
   const handleSwitchUser = (user: string) => {
     if (!isReady) {
-      alert('後端尚未準備好，請稍候');
+      toast.error('後端尚未準備好，請稍候');
       return;
     }
     setDisabled(true);
