@@ -85,14 +85,6 @@ function AccountSettings() {
 
       {/* 日記內容 */}
       <div style={{ marginTop: "20px" }}>
-        {/* <label>日記內容: </label><br/>
-        <textarea
-          value={diaryContent}
-          onChange={(e) => setDiaryContent(e.target.value)}
-          rows={10}
-          cols={50}
-          placeholder="寫下你的日記..."
-        /> */}
         {!!selectedUser && (
           <MdEditor disabled={disabled} markdown={diaryContent} setMarkdown={(mdtext) => {
             if (!unsaved) setUnsaved(true);
@@ -105,17 +97,6 @@ function AccountSettings() {
       <Button disabled={disabled} onClick={handleSaveDiary} className="mt-3">
         儲存日記
       </Button>
-
-      {/* 帳號列表 */}
-      {/* <div className="mt-5">
-        <h3>切換帳號</h3>
-        <div className="border rounded p-4">
-          <ScrollArea className="">
-            <Accounts selectedUser={selectedUser} onAccountSelect={(username) => handleSwitchUser(username)} />
-            <ScrollBar orientation="horizontal" />
-          </ScrollArea>
-        </div>
-      </div> */}
     </div>
   );
 }
