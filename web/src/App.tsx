@@ -1,6 +1,5 @@
 import AccountSettings from './components/features/account/AccountSettings';
 import DefaultLayout from './layouts/DefaultLayout';
-import { DateNavigator } from './components/features/calendar/DateNavigator';
 import { useAccountContext } from './components/features/account/AccountContext';
 import { NoAccountInstruction } from './components/features/account/NoAccountInstruction';
 import Accounts from '@/components/features/account/Accounts';
@@ -14,7 +13,6 @@ function App() {
         <>
           {selectedUser ? (
             <>
-              <DateNavigator />
               <AccountSettings />
             </>
           ) : (

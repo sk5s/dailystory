@@ -4,9 +4,9 @@ import { useCallback, useEffect, useState } from "react";
 import { useAccountContext } from "./AccountContext";
 import { MdEditor } from "../editor/Editor";
 import { toast } from "sonner";
+import { DateNavigator } from "@/components/features/calendar/DateNavigator";
 
 function AccountSettings() {
-  const [username, setUsername] = useState("");
   const [diaryContent, setDiaryContent] = useState("");
   const [disabled, setDisabled] = useState(true);
   const { selectedUser, updateUserList, selectedDate, unsaved, setUnsaved } = useAccountContext();
@@ -19,18 +19,18 @@ function AccountSettings() {
       toast.error('後端尚未準備好，請稍候');
       return;
     }
-    if (!username || !diaryContent) {
+    if (!selectedUser || !diaryContent) {
       toast.error('請輸入日記內容');
       return;
     }
-    const result = saveDiary(username, selectedDate, diaryContent);
+    const result = saveDiary(selectedUser, selectedDate, diaryContent);
     console.log("Saving dairy", result);
     if (result === 'success'){
       toast.success("已儲存！");
       updateUserList();
       setUnsaved(false);
     }
-  }, [isReady, username, diaryContent, saveDiary, selectedDate, updateUserList, setUnsaved]);
+  }, [isReady, selectedUser, diaryContent, saveDiary, selectedDate, updateUserList, setUnsaved]);
 
   // 切換使用者並載入日記
   const handleSwitchUser = (user: string) => {
@@ -39,7 +39,6 @@ function AccountSettings() {
       return;
     }
     setDisabled(true);
-    setUsername(user);
     handleRefresh(user);
   };
 
@@ -72,17 +71,6 @@ function AccountSettings() {
 
   return (
     <div>
-      {/* 輸入名字 */}
-      <div>
-        <label>使用者名稱: </label>
-        <input
-          type="text"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          placeholder="輸入你的名字"
-        />
-      </div>
-
       {/* 日記內容 */}
       <div style={{ marginTop: "20px" }}>
         {!!selectedUser && (
@@ -93,7 +81,8 @@ function AccountSettings() {
         )}
       </div>
 
-      <div className="flex justify-end">
+      <div className="flex justify-between items-end gap-4">
+        <DateNavigator />
         {/* 儲存按鈕 */}
         <Button disabled={disabled} onClick={handleSaveDiary} className="mt-3">
           儲存日記
