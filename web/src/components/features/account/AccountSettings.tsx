@@ -20,7 +20,7 @@ function AccountSettings() {
       return;
     }
     if (!username || !diaryContent) {
-      toast.error('請輸入名字和日記內容');
+      toast.error('請輸入日記內容');
       return;
     }
     const result = saveDiary(username, selectedDate, diaryContent);
@@ -32,7 +32,7 @@ function AccountSettings() {
     }
   }, [isReady, username, diaryContent, saveDiary, selectedDate, updateUserList, setUnsaved]);
 
-  // 切換帳號並載入日記
+  // 切換使用者並載入日記
   const handleSwitchUser = (user: string) => {
     if (!isReady) {
       toast.error('後端尚未準備好，請稍候');
@@ -93,10 +93,12 @@ function AccountSettings() {
         )}
       </div>
 
-      {/* 儲存按鈕 */}
-      <Button disabled={disabled} onClick={handleSaveDiary} className="mt-3">
-        儲存日記
-      </Button>
+      <div className="flex justify-end">
+        {/* 儲存按鈕 */}
+        <Button disabled={disabled} onClick={handleSaveDiary} className="mt-3">
+          儲存日記
+        </Button>
+      </div>
     </div>
   );
 }

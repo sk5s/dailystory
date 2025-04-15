@@ -24,12 +24,12 @@ export const SettingsPage = () => {
         (<Link to={`/user/${selectedUser}`}>
           <Button>
             <Edit2 />
-            編輯帳號
+            編輯使用者
           </Button>
         </Link>): (<Link to={`/user`}>
           <Button>
             <PlusIcon />
-            新增帳號
+            新增使用者
           </Button>
         </Link>)}
       </div>

@@ -40,3 +40,5 @@ diaries/
 *.layout
 *.depend
 *.pdf
+
+images/

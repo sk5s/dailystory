@@ -46,7 +46,7 @@ const Header = () => {
             <NavigationMenuContent>
               <DefaultContentLayout>
                 <div className="w-full">
-                  <h3 className="mb-2">切換帳號</h3>
+                  <h3 className="mb-2">切換使用者</h3>
                   <ScrollArea className="md:w-[190px] lg:w-[290px] whitespace-nowrap pb-4" ref={viewportRef} onWheel={onWheel}>
                     <div className="flex flex-row gap-4">
                       <Accounts selectedUser={selectedUser} onAccountSelect={(username) => {

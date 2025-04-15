@@ -7,6 +7,7 @@ interface BackendFunctions {
   saveDiary: (username: string, date: string, content: string) => string|undefined;
   loadDiary: (username: string, date: string) => string;
   getUserList: () => string[];
+  addUser: (username: string) => string;
 }
 
 // Context 的值類型
@@ -14,6 +15,7 @@ interface BackendContextValue {
   saveDiary: BackendFunctions['saveDiary'];
   loadDiary: BackendFunctions['loadDiary'];
   getUserList: BackendFunctions['getUserList'];
+  addUser: BackendFunctions['addUser'];
   isReady: boolean;
 }
 
@@ -22,6 +24,7 @@ const BackendContext = createContext<BackendContextValue>({
   saveDiary: () => {return ""},
   loadDiary: () => {return ""},
   getUserList: () => {return []},
+  addUser: () => {return ""},
   isReady: false
 });
 
@@ -32,6 +35,7 @@ export const BackendProvider: React.FC<{ children: React.ReactNode }> = ({ child
     saveDiary: () => {return ""},
     loadDiary: () => {return ""},
     getUserList: () => {return []},
+    addUser: () => {return ""}
   });
 
   useEffect(() => {
@@ -42,6 +46,7 @@ export const BackendProvider: React.FC<{ children: React.ReactNode }> = ({ child
           saveDiary: app.saveDiary,
           loadDiary: app.loadDiary,
           getUserList: app.getUserList,
+          addUser: app.addUser
         });
         setIsReady(true);
       } else {

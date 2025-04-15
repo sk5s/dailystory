@@ -5,9 +5,10 @@ interface UserProfileProps {
   selectedUser: string | null;
   onClick: () => void;
   variant?: "sm";
+  full?: boolean;
 }
 
-export const Account: React.FC<UserProfileProps> = ({ username, selectedUser, onClick, variant }) => (
+export const Account: React.FC<UserProfileProps> = ({ username, selectedUser, onClick, variant, full }) => (
   <div
     key={username}
     className={cn(
@@ -33,7 +34,8 @@ export const Account: React.FC<UserProfileProps> = ({ username, selectedUser, on
     {variant != "sm" && (
       <h3 className={
         cn(
-          "truncate w-16 text-center",
+          "text-center",
+          full ? "" : "truncate w-16",
           selectedUser === username ? 'font-semibold' : ''
         )
       }>{username}</h3>

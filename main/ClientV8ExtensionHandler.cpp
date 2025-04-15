@@ -118,7 +118,7 @@ bool ClientV8ExtensionHandler::Execute(const CefString &name,
     }
   }
 
-  // 獲取帳號列表
+  // 獲取使用者列表
   if (name == "getUserList") {
     vector<string> userList;
     string dir = dataDirName;
@@ -141,13 +141,24 @@ bool ClientV8ExtensionHandler::Execute(const CefString &name,
   if (name == "addUser") {
     if (arguments.size() == 1 && arguments[0]->IsString()) {
       string username = sanitizeString(arguments[0]->GetStringValue().ToString());
-      if (downloadAvatar(username)) {
-          cout << "Avatar downloaded successfully." << endl;
-          fs::create_directories(dataDirName + "/" + username);
+      string folderPath = dataDirName + "/" + username;
+      if (fs::exists(folderPath) && fs::is_directory(folderPath)) {
+        cout << "User exists." << endl;
+        retval = CefV8Value::CreateString("exist");
       } else {
+        cout << "Create new user" << endl;
+        fs::create_directories(folderPath);
+        if (downloadAvatar(username)) {
+          cout << "Avatar downloaded successfully." << endl;
+        } else {
           cout << "Failed to download avatar." << endl;
+          // retval = CefV8Value::CreateString("failed");
+        }
+        retval = CefV8Value::CreateString("success");
       }
     }
+
+    return true;
   }
 
   return false;
