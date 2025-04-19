@@ -24,9 +24,13 @@
 #include "include/cef_client.h"
 #include "include/cef_command_line.h"
 #include "include/cef_frame.h"
+#include "include/cef_browser_process_handler.h"
+
+#include <iostream>
 
 ClientHandler::ClientHandler()
 {
+  std::cout << "[DEBUG] ClientHandler created!" << std::endl;
 }
 
 bool ClientHandler::DoClose(CefRefPtr<CefBrowser> browser)
@@ -42,6 +46,26 @@ void ClientHandler::OnAfterCreated(CefRefPtr<CefBrowser> browser)
     m_Browser = browser;
     m_BrowserHandle = browser->GetHost()->GetWindowHandle();
   }
+}
+
+bool ClientHandler::OnBeforePopup(CefRefPtr<CefBrowser> browser,
+  CefRefPtr<CefFrame> frame,
+  int popup_id,
+  const CefString& target_url,
+  const CefString& target_frame_name,
+  CefLifeSpanHandler::WindowOpenDisposition target_disposition,
+  bool user_gesture,
+  const CefPopupFeatures& popupFeatures,
+  CefWindowInfo& windowInfo,
+  CefRefPtr<CefClient>& client,
+  CefBrowserSettings& settings,
+  CefRefPtr<CefDictionaryValue>& extra_info,
+  bool* no_javascript_access) {
+    std::cout << "[DEBUG] OnBeforePopup triggered!" << std::endl;
+    std::cout << "Popup ID: " << popup_id << std::endl;
+    std::cout << "URL: " << target_url.ToString() << std::endl;
+
+    return true; // Allow popup to open
 }
 
 void ClientHandler::OnBeforeClose(CefRefPtr<CefBrowser> browser)
