@@ -27,6 +27,7 @@
 #include "include/cef_browser_process_handler.h"
 
 #include <iostream>
+#include <windows.h>
 
 ClientHandler::ClientHandler()
 {
@@ -65,7 +66,10 @@ bool ClientHandler::OnBeforePopup(CefRefPtr<CefBrowser> browser,
     std::cout << "Popup ID: " << popup_id << std::endl;
     std::cout << "URL: " << target_url.ToString() << std::endl;
 
-    return true; // Allow popup to open
+    // Open the URL in the system's default browser
+    std::wstring url = target_url.ToWString();
+    ShellExecuteW(NULL, L"open", url.c_str(), NULL, NULL, SW_SHOWNORMAL);
+    return true;
 }
 
 void ClientHandler::OnBeforeClose(CefRefPtr<CefBrowser> browser)
