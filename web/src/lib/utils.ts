@@ -13,3 +13,22 @@ export function formatDate(date: Date){
   // return date.toISOString().slice(0, 10); This will cause an error
   return formattedDate
 }
+
+export function isToday(dateString: string) {
+  const inputDate = new Date(dateString);
+  const today = new Date();
+
+  return (
+    inputDate.getFullYear() === today.getFullYear() &&
+    inputDate.getMonth() === today.getMonth() &&
+    inputDate.getDate() === today.getDate()
+  );
+}
+
+export function getDateStr(date: string){
+  console.log(isToday(date))
+  if (isToday(date)){
+    return "今天"
+  }
+  return ` ${date.split("-").slice(1).join("/")}`
+}

@@ -1,4 +1,4 @@
-import AccountSettings from './components/features/account/AccountSettings';
+import AccountPage from './components/features/account/AccountPage';
 import DefaultLayout from './layouts/DefaultLayout';
 import { useAccountContext } from './components/features/account/AccountContext';
 import { NoAccountInstruction } from './components/features/account/NoAccountInstruction';
@@ -13,7 +13,7 @@ function App() {
         <>
           {selectedUser ? (
             <>
-              <AccountSettings />
+              <AccountPage />
             </>
           ) : (
             <div className='min-h-[60vh] w-full flex flex-col justify-center items-center'>
